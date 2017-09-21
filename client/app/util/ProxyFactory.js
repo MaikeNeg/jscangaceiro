@@ -1,9 +1,11 @@
 class ProxyFactory {
     static create(objeto, props, armadilha) {
+
         return new Proxy(objeto, {
+
             get(target, prop, receiver) {
 
-                if (ProxyFactory._ehFuncao(target[prop] && props.includes(prop))) {
+                if (ProxyFactory._ehFuncao(target[prop]) && props.includes(prop)) {
 
                     return function() {
 
