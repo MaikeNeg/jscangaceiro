@@ -1,0 +1,12 @@
+const negociacoes = new	Proxy(new Negociacoes(), {
+    get(target, prop, receiver) {
+        if(typeof(target[prop]) == typeof(Function) && ['adiciona','esvazia'].includes(prop)) {
+            /* falta código ainda */
+        }
+    }
+});
+negociacoes.adiciona(new Negociacao(new Date(), 1, 100));
+
+//Quando me perguntar do porque o código abaixo funciona, é só lembrar que, por baixo dos panos, o javascript faz um get para obter uma referencia ao método. Lembrar da linha de código abaixo também ajuda a entender a linha 3:
+
+Negociacoes.adiciona = function() {};
