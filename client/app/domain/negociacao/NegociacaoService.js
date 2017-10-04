@@ -1,29 +1,59 @@
 class NegociacaoService {
 
-    obterNegociacoesDaSemana(callback) {
+    constructor() {
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'negociacoes/semana');
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState == 4) {
+        this._http = new HttpService;
+    }
 
-                if (xhr.status == 200) {
+    obterNegociacoesDaSemana() {
 
-                    const negociacoes =
-                    JSON.parse(xhr.responseText)
-                        .map(objeto =>
-                                new Negociacao(
-                                    new Date(objeto.data), objeto.quantidade, objeto.valor
-                                ));
-
-                        callback(null, negociacoes)
-                } else {
-
-                    console.log(xhr.responseText);
-                    callback('Não foi possível obter as negociações da semana', null)
-                }
+        return this._http
+        .get('negociacoes/semana')
+        .then(
+            dados => {
+                const negociacoes = dados.map( objeto =>
+                new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor));
+                return negociacoes;
+            },
+            err => {
+                throw new Error('Não foi possível obter as negociações');
             }
-        }
-        xhr.send();
+        );
+    }
+
+    obterNegociacoesDaSemanaAnterior() {
+
+        return this._http
+        .get('negociacoes/anterior')
+        .then(
+            dados => {
+
+                const negociacoes = dados.map(
+                    objeto => new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)
+                );
+                return negociacoes;
+            },
+            err => {
+                throw new Error('Não foi possível obter as negociações da semana anterior');
+            }
+        );
+    }
+
+    obterNegociacoesDaSemanaRetrasada() {
+
+        return this._http
+        .get('negociacoes/retrasada')
+        .then(
+            dados => {
+
+                const negociacoes = dados.map(objeto =>
+                    new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor)
+                );
+                return negociacoes;
+            },
+            err => {
+                throw new Error('Não foi possível obter as negociações da semana retrasada');
+            }
+        )
     }
 }
